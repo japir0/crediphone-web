@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es-PY">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crediphone — Financiá tu iPhone sin banco</title>
+<meta name="description" content="Elegí tu iPhone, financialo en cuotas simples y llevatelo hoy. Sin tarjeta de crédito, sin banco.">
+
+<!--
+  ======================================================================
+  PENDIENTES ANTES DE PUBLICAR (buscar "TODO" en este archivo y en
+  data/catalog.json):
+  1. Número de WhatsApp Business real (hay uno de ejemplo puesto ahora).
+  2. Logo real (hoy hay un wordmark de texto, no el isologo definitivo).
+  3. Catálogo con precios y condiciones reales (data/catalog.json es 100%
+     de ejemplo).
+  4. RECARGO_EJEMPLO más abajo en el <script> — la tasa real tiene que
+     estar validada legalmente antes de mostrarse a un cliente.
+  5. terminos.html es un borrador de estructura, no texto legal válido.
+  ======================================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --rojo: #E4002B;
+    --rojo-oscuro: #B5001F;
+    --carbon: #1A1A1A;
+    --hueso: #FAF7F2;
+    --hueso-borde: #E9E3D9;
+    --whatsapp: #25D366;
+    --whatsapp-oscuro: #1DA851;
+    --texto: #2B2B2B;
+    --texto-suave: #6B6459;
+    --radio: 16px;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Inter', system-ui, sans-serif;
+    color:var(--texto);
+    background:var(--hueso);
+    line-height:1.5;
+  }
+  h1,h2,h3,.marca{
+    font-family:'Sora', system-ui, sans-serif;
+  }
+  a{ color:inherit; text-decoration:none; }
+  img{ max-width:100%; display:block; }
+  .contenedor{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:var(--hueso);
+    border-bottom:1px solid var(--hueso-borde);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 24px;
+    max-width:1120px; margin:0 auto;
+  }
+  .marca{
+    font-size:22px; font-weight:800; color:var(--carbon);
+    display:flex; align-items:center; gap:8px;
+  }
+  .marca span{ color:var(--rojo); }
+  .nav-links{
+    display:flex; gap:28px; font-weight:600; font-size:15px;
+  }
+  .nav-links a:hover{ color:var(--rojo); }
+  .btn-nav-wsp{
+    background:var(--whatsapp); color:#fff; padding:10px 18px;
+    border-radius:999px; font-weight:600; font-size:14px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .btn-nav-wsp:hover{ background:var(--whatsapp-oscuro); }
+  @media (max-width:720px){
+    .nav-links{ display:none; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:72px 24px 56px;
+    text-align:center;
+  }
+  .hero h1{
+    font-size:clamp(32px, 5vw, 52px);
+    font-weight:800;
+    color:var(--carbon);
+    max-width:820px;
+    margin:0 auto 20px;
+    line-height:1.1;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--rojo);
+  }
+  .hero p{
+    font-size:18px;
+    color:var(--texto-suave);
+    max-width:560px;
+    margin:0 auto 32px;
+  }
+  .hero-ctas{
+    display:flex; gap:14px; justify-content:center; flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:16px 28px; border-radius:999px;
+    font-weight:600; font-size:16px;
+    border:none; cursor:pointer;
+  }
+  .btn-primario{ background:var(--whatsapp); color:#fff; }
+  .btn-primario:hover{ background:var(--whatsapp-oscuro); }
+  .btn-secundario{ background:#fff; color:var(--carbon); border:1px solid var(--hueso-borde); }
+  .btn-secundario:hover{ border-color:var(--carbon); }
+
+  .confianza-bar{
+    display:flex; justify-content:center; gap:40px; flex-wrap:wrap;
+    margin-top:48px; padding-top:32px; border-top:1px solid var(--hueso-borde);
+    font-size:14px; color:var(--texto-suave); font-weight:600;
+  }
+
+  /* ---------- Cómo funciona ---------- */
+  .como-funciona{ padding:64px 24px; background:#fff; }
+  .como-funciona h2, .catalogo h2, .confianza h2{
+    font-size:32px; text-align:center; color:var(--carbon); margin-bottom:12px;
+  }
+  .subtitulo-seccion{
+    text-align:center; color:var(--texto-suave); margin-bottom:48px; font-size:16px;
+  }
+  .pasos{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:32px;
+    max-width:1000px; margin:0 auto;
+  }
+  .paso{ text-align:center; }
+  .paso-numero{
+    width:48px; height:48px; border-radius:50%;
+    background:var(--rojo); color:#fff; font-weight:800; font-size:20px;
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 16px;
+  }
+  .paso h3{ font-size:18px; margin-bottom:8px; color:var(--carbon); }
+  .paso p{ font-size:15px; color:var(--texto-suave); }
+  @media (max-width:720px){ .pasos{ grid-template-columns:1fr; } }
+
+  /* ---------- Catálogo ---------- */
+  .catalogo{ padding:64px 24px; }
+  .filtros{
+    display:flex; gap:12px; justify-content:center; margin-bottom:36px; flex-wrap:wrap;
+  }
+  .filtro-btn{
+    padding:10px 20px; border-radius:999px; border:1px solid var(--hueso-borde);
+    background:#fff; font-weight:600; font-size:14px; cursor:pointer;
+  }
+  .filtro-btn.activo{ background:var(--carbon); color:#fff; border-color:var(--carbon); }
+
+  .grid-catalogo{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+    gap:24px;
+  }
+  .tarjeta{
+    background:#fff; border:1px solid var(--hueso-borde); border-radius:var(--radio);
+    padding:20px; display:flex; flex-direction:column;
+  }
+  .tarjeta img{ width:100%; max-width:140px; margin:0 auto 16px; }
+  .tarjeta h3{ font-size:18px; color:var(--carbon); }
+  .tarjeta .detalle{ font-size:13px; color:var(--texto-suave); margin-bottom:14px; }
+  .selector-cuotas{
+    display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap;
+  }
+  .selector-cuotas button{
+    flex:1; min-width:44px; padding:8px 0; border-radius:8px;
+    border:1px solid var(--hueso-borde); background:var(--hueso);
+    font-weight:600; font-size:13px; cursor:pointer;
+  }
+  .selector-cuotas button.activo{
+    background:var(--rojo); color:#fff; border-color:var(--rojo);
+  }
+  .resultado-cuota{
+    background:var(--hueso); border-radius:10px; padding:12px 14px; margin-bottom:16px;
+  }
+  .resultado-cuota .monto{ font-size:20px; font-weight:800; color:var(--carbon); }
+  .resultado-cuota .nota{ font-size:12px; color:var(--texto-suave); }
+  .tarjeta .btn{ width:100%; justify-content:center; padding:12px; font-size:14px; margin-top:auto; }
+
+  /* ---------- Confianza / legal ---------- */
+  .confianza{ padding:64px 24px; background:#fff; text-align:center; }
+  .confianza p{
+    max-width:640px; margin:0 auto 16px; color:var(--texto-suave); font-size:15px;
+  }
+  .confianza a{ color:var(--rojo); font-weight:600; }
+
+  footer{
+    padding:32px 24px; text-align:center; font-size:13px; color:var(--texto-suave);
+    border-top:1px solid var(--hueso-borde);
+  }
+  footer a{ font-weight:600; }
+
+  .aviso-ejemplo{
+    background:#FFF4E5; border:1px solid #F3D9A8; color:#8A5A00;
+    font-size:13px; text-align:center; padding:10px 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="aviso-ejemplo">
+  Sitio en construcción — catálogo, precios y número de WhatsApp son de ejemplo. No representan condiciones reales todavía.
+</div>
+
+<header>
+  <nav class="nav">
+    <div class="marca">credi<span>phone</span></div>
+    <div class="nav-links">
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#catalogo">Catálogo</a>
+      <a href="terminos.html">Términos</a>
+    </div>
+    <a class="btn-nav-wsp" href="#" data-wsp-cta data-wsp-msg="Hola, quiero información sobre financiamiento de iPhone.">
+      WhatsApp
+    </a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="contenedor">
+    <h1>Tu <em>iPhone</em>, sin vueltas ni bancos.</h1>
+    <p>Elegís el modelo, pagás en cuotas simples y te lo llevás hoy. Sin tarjeta de crédito, sin depender de un banco.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primario" href="#" data-wsp-cta data-wsp-msg="Hola, quiero financiar un iPhone.">
+        Empezar por WhatsApp
+      </a>
+      <a class="btn btn-secundario" href="#catalogo">Ver catálogo</a>
+    </div>
+    <div class="confianza-bar">
+      <span>Entrega inmediata</span>
+      <span>100% por WhatsApp</span>
+      <span>Sin tarjeta de crédito</span>
+    </div>
+  </div>
+</section>
+
+<section class="como-funciona" id="como-funciona">
+  <div class="contenedor">
+    <h2>Cómo funciona</h2>
+    <p class="subtitulo-seccion">Tres pasos, todo por WhatsApp.</p>
+    <div class="pasos">
+      <div class="paso">
+        <div class="paso-numero">1</div>
+        <h3>Elegís tu modelo</h3>
+        <p>Mirás el catálogo y elegís el iPhone y la cantidad de cuotas que te sirve.</p>
+      </div>
+      <div class="paso">
+        <div class="paso-numero">2</div>
+        <h3>Coordinamos por WhatsApp</h3>
+        <p>Te confirmamos condiciones y coordinamos la entrega. Sin papeleo eterno.</p>
+      </div>
+      <div class="paso">
+        <div class="paso-numero">3</div>
+        <h3>Te lo llevás y pagás en cuotas</h3>
+        <p>Usás tu iPhone desde el día uno mientras pagás las cuotas acordadas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="catalogo" id="catalogo">
+  <div class="contenedor">
+    <h2>Catálogo</h2>
+    <p class="subtitulo-seccion">Elegí un modelo y la cantidad de cuotas para ver el monto.</p>
+    <div class="filtros" id="filtros"></div>
+    <div class="grid-catalogo" id="grid-catalogo">
+      <p style="text-align:center; color:var(--texto-suave);">Cargando catálogo…</p>
+    </div>
+  </div>
+</section>
+
+<section class="confianza">
+  <div class="contenedor">
+    <h2>Antes de escribirnos</h2>
+    <p>Financiamos directo, sin intermediarios. Las condiciones de cada crédito (entrega inicial, cantidad de cuotas y monto) se confirman por WhatsApp antes de cualquier compromiso.</p>
+    <p>Podés revisar nuestros <a href="terminos.html">Términos y Condiciones</a> antes de avanzar.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="marca" style="justify-content:center; margin-bottom:8px;">credi<span>phone</span></div>
+  <p>Asunción, Paraguay · <a href="terminos.html">Términos y Condiciones</a></p>
+  <p style="margin-top:8px;">© 2026 Crediphone</p>
+</footer>
+
+<script>
+  // ======================================================================
+  // TODO: reemplazar por el número real de WhatsApp Business (formato
+  // internacional sin "+" ni espacios, ej: 595981234567). Este es un
+  // placeholder y NO es un número real.
+  // ======================================================================
+  const WSP_NUMERO = "595900000000";
+
+  // TODO: la tasa/recargo real tiene que estar validada legalmente antes
+  // de publicar. Este número es 100% de ejemplo para que el cálculo de
+  // cuotas se vea funcionando en el diseño.
+  const RECARGO_EJEMPLO = 15; // % sobre el saldo financiado
+
+  const CUOTAS_DISPONIBLES = [3, 6, 9, 12];
+
+  function linkWsp(mensaje){
+    return `https://wa.me/${WSP_NUMERO}?text=${encodeURIComponent(mensaje)}`;
+  }
+
+  document.querySelectorAll('[data-wsp-cta]').forEach(el=>{
+    el.href = linkWsp(el.dataset.wspMsg);
+  });
+
+  function formatoGs(numero){
+    return "₲ " + Math.round(numero).toLocaleString('es-PY');
+  }
+
+  function calcularCuota(producto, cantidadCuotas){
+    const entregaInicial = producto.valorFinanciado * (producto.entregaInicialPct/100);
+    const saldo = producto.valorFinanciado - entregaInicial;
+    const saldoConRecargo = saldo * (1 + RECARGO_EJEMPLO/100);
+    const montoCuota = saldoConRecargo / cantidadCuotas;
+    return { entregaInicial, montoCuota };
+  }
+
+  fetch('data/catalog.json')
+    .then(r => r.json())
+    .then(data => renderCatalogo(data.productos))
+    .catch(() => {
+      document.getElementById('grid-catalogo').innerHTML =
+        '<p style="text-align:center;color:var(--texto-suave);">No se pudo cargar el catálogo (data/catalog.json). Si estás probando este archivo abriéndolo directo desde tu computadora, corré un servidor local (ej: <code>python3 -m http.server</code>) — los navegadores bloquean el fetch de archivos locales por seguridad.</p>';
+    });
+
+  function renderCatalogo(productos){
+    // Filtros por modelo
+    const modelos = ['Todos', ...new Set(productos.map(p => p.modelo))];
+    const filtrosEl = document.getElementById('filtros');
+    filtrosEl.innerHTML = modelos.map((m,i) =>
+      `<button class="filtro-btn ${i===0?'activo':''}" data-modelo="${m}">${m}</button>`
+    ).join('');
+
+    filtrosEl.querySelectorAll('.filtro-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        filtrosEl.querySelectorAll('.filtro-btn').forEach(b=>b.classList.remove('activo'));
+        btn.classList.add('activo');
+        const modelo = btn.dataset.modelo;
+        pintarGrid(modelo === 'Todos' ? productos : productos.filter(p=>p.modelo===modelo));
+      });
+    });
+
+    pintarGrid(productos);
+  }
+
+  function pintarGrid(productos){
+    const grid = document.getElementById('grid-catalogo');
+    grid.innerHTML = productos.map(p => tarjetaHTML(p)).join('');
+
+    productos.forEach(p => {
+      const tarjeta = grid.querySelector(`[data-id="${p.id}"]`);
+      const botonesCuota = tarjeta.querySelectorAll('.selector-cuotas button');
+      botonesCuota.forEach(b=>{
+        b.addEventListener('click', ()=>{
+          botonesCuota.forEach(x=>x.classList.remove('activo'));
+          b.classList.add('activo');
+          actualizarResultado(tarjeta, p, parseInt(b.dataset.cuotas));
+        });
+      });
+      actualizarResultado(tarjeta, p, CUOTAS_DISPONIBLES[1]); // default: 6 cuotas
+      const wspBtn = tarjeta.querySelector('[data-wsp-cta]');
+      wspBtn.href = linkWsp(`Hola, me interesa el ${p.modelo} ${p.almacenamiento} (${p.color}).`);
+    });
+  }
+
+  function actualizarResultado(tarjeta, producto, cuotas){
+    tarjeta.querySelectorAll('.selector-cuotas button').forEach(b=>{
+      b.classList.toggle('activo', parseInt(b.dataset.cuotas) === cuotas);
+    });
+    const { entregaInicial, montoCuota } = calcularCuota(producto, cuotas);
+    tarjeta.querySelector('.monto').textContent = `${formatoGs(montoCuota)} x ${cuotas}`;
+    tarjeta.querySelector('.nota').textContent = `Entrega inicial: ${formatoGs(entregaInicial)}`;
+  }
+
+  function tarjetaHTML(p){
+    return `
+    <div class="tarjeta" data-id="${p.id}">
+      <img src="${p.imagen}" alt="${p.modelo}">
+      <h3>${p.modelo}</h3>
+      <div class="detalle">${p.almacenamiento} · ${p.color}</div>
+      <div class="selector-cuotas">
+        ${CUOTAS_DISPONIBLES.map(c => `<button data-cuotas="${c}">${c}x</button>`).join('')}
+      </div>
+      <div class="resultado-cuota">
+        <div class="monto">—</div>
+        <div class="nota">—</div>
+      </div>
+      <a class="btn btn-primario" data-wsp-cta href="#">Consultar por WhatsApp</a>
+    </div>`;
+  }
+</script>
+
+</body>
+</html>
