@@ -1,0 +1,68 @@
+data/catalog.json{
+  "_readme": "DATOS DE EJEMPLO — todo lo numérico acá (valorFinanciado, entregaInicialPct) es un placeholder inventado para probar el diseño. Reemplazar con precios y condiciones reales antes de publicar. La tasa/recargo aplicado se define aparte en index.html (RECARGO_EJEMPLO) y también es placeholder.",
+  "productos": [
+    {
+      "id": "ip13-128-medianoche",
+      "modelo": "iPhone 13",
+      "almacenamiento": "128GB",
+      "color": "Medianoche",
+      "valorFinanciado": 4500000,
+      "entregaInicialPct": 20,
+      "imagen": "img/phone-placeholder.svg"
+    },
+    {
+      "id": "ip14-128-azul",
+      "modelo": "iPhone 14",
+      "almacenamiento": "128GB",
+      "color": "Azul",
+      "valorFinanciado": 5400000,
+      "entregaInicialPct": 20,
+      "imagen": "img/phone-placeholder.svg"
+    },
+    {
+      "id": "ip15-128-negro",
+      "modelo": "iPhone 15",
+      "almacenamiento": "128GB",
+      "color": "Negro",
+      "valorFinanciado": 6300000,
+      "entregaInicialPct": 20,
+      "imagen": "img/phone-placeholder.svg"
+    },
+    {
+      "id": "ip15-256-rosa",
+      "modelo": "iPhone 15",
+      "almacenamiento": "256GB",
+      "color": "Rosa",
+      "valorFinanciado": 7100000,
+      "entregaInicialPct": 20,
+      "imagen": "img/phone-placeholder.svg"
+    },
+    {
+      "id": "ip16-128-blanco",
+      "modelo": "iPhone 16",
+      "almacenamiento": "128GB",
+      "color": "Blanco",
+      "valorFinanciado": 7800000,
+      "entregaInicialPct": 25,
+      "imagen": "img/phone-placeholder.svg"
+    },
+    {
+      "id": "ip17-128-negro",
+      "modelo": "iPhone 17",
+      "almacenamiento": "128GB",
+      "color": "Negro",
+      "valorFinanciado": 9200000,
+      "entregaInicialPct": 25,
+      "imagen": "img/phone-placeholder.svg"
+    },
+    {
+      "id": "ip17pro-256-titanio",
+      "modelo": "iPhone 17 Pro",
+      "almacenamiento": "256GB",
+      "color": "Titanio",
+      "valorFinanciado": 12500000,
+      "entregaInicialPct": 30,
+      "imagen": "img/phone-placeholder.svg"
+    }
+  ]
+}
