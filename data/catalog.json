@@ -1,4 +1,4 @@
-data/catalog.json{
+{
   "_readme": "DATOS DE EJEMPLO — todo lo numérico acá (valorFinanciado, entregaInicialPct) es un placeholder inventado para probar el diseño. Reemplazar con precios y condiciones reales antes de publicar. La tasa/recargo aplicado se define aparte en index.html (RECARGO_EJEMPLO) y también es placeholder.",
   "productos": [
     {
