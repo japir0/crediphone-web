@@ -548,7 +548,7 @@
     const montoCuota = saldoConRecargo / cuotas;
 
     montoEl.textContent = `${formatoGs(montoCuota)} x ${cuotas}`;
-    detalleEl.textContent = `Entrega: ${formatoGs(entrega)} · Tasa: ${tasaAnual}% anual · Total a financiar: ${formatoGs(saldoConRecargo)}`;
+    detalleEl.textContent = `Entrega: ${formatoGs(entrega)} · Monto final detallado en el pagaré/contrato.`;
 
     actualizarLinkWsp({ producto, capacidad, color, cuotas, entrega, montoCuota, tasaAnual });
   }
