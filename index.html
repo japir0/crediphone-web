@@ -14,9 +14,13 @@
   2. Logo: ya está el wordmark real (img/logo-crediphone.png). Falta el
      ícono/isologo aparte si querés uno para favicon o avatar de redes.
   3. Catálogo con precios y condiciones reales (data/catalog.json es 100%
-     de ejemplo).
-  4. RECARGO_EJEMPLO más abajo en el <script> — la tasa real tiene que
-     estar validada legalmente antes de mostrarse a un cliente.
+     de ejemplo, agrupado por modelo con capacidades y colores).
+  4. TASAS_POR_CUOTAS más abajo en el <script> (35% / 45% / 54% anual
+     según plazo) — son las que pediste, pero OJO: en tus notas de este
+     proyecto ya está marcado que la tasa implícita de Crediphone podría
+     superar el máximo legal en Paraguay y que falta el registro OCD/BCP.
+     No las trates como definitivas frente a un cliente real hasta
+     confirmarlas con un abogado.
   5. terminos.html es un borrador de estructura, no texto legal válido.
   ======================================================================
 -->
@@ -51,6 +55,7 @@
   }
   a{ color:inherit; text-decoration:none; }
   img{ max-width:100%; display:block; }
+  button{ font-family:inherit; }
   .contenedor{
     max-width:1120px;
     margin:0 auto;
@@ -154,15 +159,6 @@
 
   /* ---------- Catálogo ---------- */
   .catalogo{ padding:64px 24px; }
-  .filtros{
-    display:flex; gap:12px; justify-content:center; margin-bottom:36px; flex-wrap:wrap;
-  }
-  .filtro-btn{
-    padding:10px 20px; border-radius:999px; border:1px solid var(--hueso-borde);
-    background:#fff; font-weight:600; font-size:14px; cursor:pointer;
-  }
-  .filtro-btn.activo{ background:var(--carbon); color:#fff; border-color:var(--carbon); }
-
   .grid-catalogo{
     display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
     gap:24px;
@@ -174,23 +170,54 @@
   .tarjeta img{ width:100%; max-width:140px; margin:0 auto 16px; }
   .tarjeta h3{ font-size:18px; color:var(--carbon); }
   .tarjeta .detalle{ font-size:13px; color:var(--texto-suave); margin-bottom:14px; }
-  .selector-cuotas{
-    display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap;
-  }
-  .selector-cuotas button{
-    flex:1; min-width:44px; padding:8px 0; border-radius:8px;
-    border:1px solid var(--hueso-borde); background:var(--hueso);
-    font-weight:600; font-size:13px; cursor:pointer;
-  }
-  .selector-cuotas button.activo{
-    background:var(--rojo); color:#fff; border-color:var(--rojo);
-  }
   .resultado-cuota{
     background:var(--hueso); border-radius:10px; padding:12px 14px; margin-bottom:16px;
   }
-  .resultado-cuota .monto{ font-size:20px; font-weight:800; color:var(--carbon); }
+  .resultado-cuota .monto{ font-size:18px; font-weight:800; color:var(--carbon); }
   .resultado-cuota .nota{ font-size:12px; color:var(--texto-suave); }
   .tarjeta .btn{ width:100%; justify-content:center; padding:12px; font-size:14px; margin-top:auto; }
+
+  /* ---------- Modal cotizador ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(26,26,26,0.6);
+    display:flex; align-items:flex-start; justify-content:center;
+    padding:40px 24px; overflow-y:auto; z-index:200;
+  }
+  .modal-overlay[hidden]{ display:none; }
+  .modal{
+    background:#fff; border-radius:20px; max-width:460px; width:100%;
+    padding:28px; position:relative;
+  }
+  .modal-cerrar{
+    position:absolute; top:16px; right:16px; background:none; border:none;
+    font-size:22px; line-height:1; cursor:pointer; color:var(--texto-suave); padding:4px;
+  }
+  .modal h2{ font-size:22px; color:var(--carbon); margin-bottom:6px; padding-right:24px; }
+  .modal-subtitulo{ font-size:14px; color:var(--texto-suave); margin-bottom:24px; }
+  .modal-campo{ margin-bottom:20px; }
+  .modal-campo label{ display:block; font-weight:600; font-size:14px; margin-bottom:8px; color:var(--carbon); }
+  .chip-selector{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip-selector button{
+    padding:9px 16px; border-radius:999px; border:1px solid var(--hueso-borde);
+    background:var(--hueso); font-weight:600; font-size:13px; cursor:pointer;
+  }
+  .chip-selector button.activo{ background:var(--rojo); color:#fff; border-color:var(--rojo); }
+  .input-campo{
+    width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--hueso-borde);
+    font-size:15px; font-family:inherit; background:#fff; color:var(--texto);
+  }
+  select.input-campo{ appearance:none; cursor:pointer; }
+  .hint{ font-size:12px; color:var(--texto-suave); margin-top:8px; }
+  .resultado-modal{
+    background:var(--hueso); border-radius:12px; padding:16px 18px; margin-bottom:16px;
+  }
+  .resultado-modal .monto-grande{ font-size:24px; font-weight:800; color:var(--carbon); }
+  .resultado-modal .detalle-resultado{ font-size:13px; color:var(--texto-suave); margin-top:6px; }
+  .disclaimer-modal{ font-size:12px; color:var(--texto-suave); margin-bottom:18px; }
+  @media (max-width:480px){
+    .modal-overlay{ padding:0; align-items:flex-end; }
+    .modal{ border-radius:20px 20px 0 0; max-height:92vh; overflow-y:auto; }
+  }
 
   /* ---------- Confianza / legal ---------- */
   .confianza{ padding:64px 24px; background:#fff; text-align:center; }
@@ -236,9 +263,9 @@
     <h1>Cuotas más bajas, tu nuevo <em>iPhone</em> hoy.</h1>
     <p>Elegís el modelo, pagás en cuotas simples y te lo llevás hoy. Sin tarjeta de crédito, sin depender de un banco.</p>
     <div class="hero-ctas">
-      <a class="btn btn-primario" href="#" data-wsp-cta data-wsp-msg="Hola, quiero financiar un iPhone.">
-        Empezar por WhatsApp
-      </a>
+      <button class="btn btn-primario" id="btn-abrir-cotizador" type="button">
+        Solicitar por WhatsApp
+      </button>
       <a class="btn btn-secundario" href="#catalogo">Ver catálogo</a>
     </div>
     <div class="confianza-bar">
@@ -257,7 +284,7 @@
       <div class="paso">
         <div class="paso-numero">1</div>
         <h3>Elegís tu modelo</h3>
-        <p>Mirás el catálogo y elegís el iPhone y la cantidad de cuotas que te sirve.</p>
+        <p>Elegís capacidad, color y armás tu plan de cuotas con la entrega que quieras poner.</p>
       </div>
       <div class="paso">
         <div class="paso-numero">2</div>
@@ -276,8 +303,7 @@
 <section class="catalogo" id="catalogo">
   <div class="contenedor">
     <h2>Catálogo</h2>
-    <p class="subtitulo-seccion">Elegí un modelo y la cantidad de cuotas para ver el monto.</p>
-    <div class="filtros" id="filtros"></div>
+    <p class="subtitulo-seccion">Elegí un modelo para armar tu plan: capacidad, color, cuotas y entrega.</p>
     <div class="grid-catalogo" id="grid-catalogo">
       <p style="text-align:center; color:var(--texto-suave);">Cargando catálogo…</p>
     </div>
@@ -288,6 +314,7 @@
   <div class="contenedor">
     <h2>Antes de escribirnos</h2>
     <p>Financiamos directo, sin intermediarios. Las condiciones de cada crédito (entrega inicial, cantidad de cuotas y monto) se confirman por WhatsApp antes de cualquier compromiso.</p>
+    <p>Los precios pueden variar un poco según el estado del equipo — el monto final se confirma por WhatsApp.</p>
     <p>Podés revisar nuestros <a href="terminos.html">Términos y Condiciones</a> antes de avanzar.</p>
   </div>
 </section>
@@ -298,6 +325,50 @@
   <p style="margin-top:8px;">© 2026 Crediphone</p>
 </footer>
 
+<!-- ---------- Modal cotizador ---------- -->
+<div class="modal-overlay" id="modal-cotizador" hidden>
+  <div class="modal">
+    <button class="modal-cerrar" id="modal-cerrar" type="button" aria-label="Cerrar">✕</button>
+    <h2>Cotizá tu iPhone</h2>
+    <p class="modal-subtitulo">Elegí modelo, capacidad, color y cuotas para ver el monto mensual.</p>
+
+    <div class="modal-campo">
+      <label for="modelo-select">Modelo</label>
+      <select id="modelo-select" class="input-campo"></select>
+    </div>
+
+    <div class="modal-campo">
+      <label>Capacidad</label>
+      <div class="chip-selector" id="capacidad-selector"></div>
+    </div>
+
+    <div class="modal-campo">
+      <label>Color</label>
+      <div class="chip-selector" id="color-selector"></div>
+    </div>
+
+    <div class="modal-campo">
+      <label>Cantidad de cuotas</label>
+      <div class="chip-selector" id="cuotas-selector"></div>
+    </div>
+
+    <div class="modal-campo">
+      <label for="entrega-input">Entrega inicial (₲)</label>
+      <input type="number" id="entrega-input" class="input-campo" placeholder="Ingresá el monto" min="0" step="1000" inputmode="numeric">
+      <div class="hint" id="entrega-hint"></div>
+    </div>
+
+    <div class="resultado-modal">
+      <div class="monto-grande" id="monto-cuota-modal">—</div>
+      <div class="detalle-resultado" id="detalle-resultado-modal">Ingresá la entrega inicial para calcular la cuota.</div>
+    </div>
+
+    <p class="disclaimer-modal">Los precios pueden variar un poco según el estado del equipo. El monto final siempre se confirma por WhatsApp.</p>
+
+    <a class="btn btn-primario" id="btn-solicitar-modal" href="#" style="width:100%; justify-content:center;">Solicitar por WhatsApp</a>
+  </div>
+</div>
+
 <script>
   // ======================================================================
   // Número de WhatsApp Business real de la tienda (formato internacional
@@ -305,12 +376,14 @@
   // ======================================================================
   const WSP_NUMERO = "595992401579";
 
-  // TODO: la tasa/recargo real tiene que estar validada legalmente antes
-  // de publicar. Este número es 100% de ejemplo para que el cálculo de
-  // cuotas se vea funcionando en el diseño.
-  const RECARGO_EJEMPLO = 15; // % sobre el saldo financiado
+  // TODO: tasas por plazo — ya son las que pediste (35% / 45% / 54%
+  // anual), pero seguí el aviso del comentario de arriba: falta
+  // validarlas legalmente antes de tratarlas como definitivas.
+  const TASAS_POR_CUOTAS = { 6: 35, 9: 45, 12: 54 }; // % anual según plazo
+  const CUOTAS_DISPONIBLES = [6, 9, 12];
 
-  const CUOTAS_DISPONIBLES = [3, 6, 9, 12];
+  let CATALOGO = [];
+  const estado = { producto: null, capacidad: null, color: null, cuotas: 9 };
 
   function linkWsp(mensaje){
     return `https://wa.me/${WSP_NUMERO}?text=${encodeURIComponent(mensaje)}`;
@@ -324,90 +397,173 @@
     return "₲ " + Math.round(numero).toLocaleString('es-PY');
   }
 
-  function calcularCuota(producto, cantidadCuotas){
-    const entregaInicial = producto.valorFinanciado * (producto.entregaInicialPct/100);
-    const saldo = producto.valorFinanciado - entregaInicial;
-    const saldoConRecargo = saldo * (1 + RECARGO_EJEMPLO/100);
-    const montoCuota = saldoConRecargo / cantidadCuotas;
-    return { entregaInicial, montoCuota };
-  }
-
   fetch('data/catalog.json')
     .then(r => r.json())
-    .then(data => renderCatalogo(data.productos))
+    .then(data => {
+      CATALOGO = data.productos;
+      initCatalogoGrid();
+      initCuotasSelector();
+      initModal();
+    })
     .catch(() => {
       document.getElementById('grid-catalogo').innerHTML =
         '<p style="text-align:center;color:var(--texto-suave);">No se pudo cargar el catálogo (data/catalog.json). Si estás probando este archivo abriéndolo directo desde tu computadora, corré un servidor local (ej: <code>python3 -m http.server</code>) — los navegadores bloquean el fetch de archivos locales por seguridad.</p>';
     });
 
-  function renderCatalogo(productos){
-    // Filtros por modelo
-    const modelos = ['Todos', ...new Set(productos.map(p => p.modelo))];
-    const filtrosEl = document.getElementById('filtros');
-    filtrosEl.innerHTML = modelos.map((m,i) =>
-      `<button class="filtro-btn ${i===0?'activo':''}" data-modelo="${m}">${m}</button>`
-    ).join('');
-
-    filtrosEl.querySelectorAll('.filtro-btn').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        filtrosEl.querySelectorAll('.filtro-btn').forEach(b=>b.classList.remove('activo'));
-        btn.classList.add('activo');
-        const modelo = btn.dataset.modelo;
-        pintarGrid(modelo === 'Todos' ? productos : productos.filter(p=>p.modelo===modelo));
-      });
-    });
-
-    pintarGrid(productos);
-  }
-
-  function pintarGrid(productos){
+  function initCatalogoGrid(){
     const grid = document.getElementById('grid-catalogo');
-    grid.innerHTML = productos.map(p => tarjetaHTML(p)).join('');
+    grid.innerHTML = CATALOGO.map(p => {
+      const precios = p.capacidades.map(c => c.valorFinanciado);
+      const desde = Math.min(...precios);
+      return `
+      <div class="tarjeta">
+        <img src="${p.imagen}" alt="${p.modelo}">
+        <h3>${p.modelo}</h3>
+        <div class="detalle">${p.colores.join(' · ')}</div>
+        <div class="resultado-cuota">
+          <div class="monto">Desde ${formatoGs(desde)}</div>
+          <div class="nota">${p.capacidades.map(c => c.almacenamiento).join(' / ')}</div>
+        </div>
+        <button class="btn btn-primario" data-abrir-modelo="${p.id}" type="button">Elegir capacidad y color</button>
+      </div>`;
+    }).join('');
 
-    productos.forEach(p => {
-      const tarjeta = grid.querySelector(`[data-id="${p.id}"]`);
-      const botonesCuota = tarjeta.querySelectorAll('.selector-cuotas button');
-      botonesCuota.forEach(b=>{
-        b.addEventListener('click', ()=>{
-          botonesCuota.forEach(x=>x.classList.remove('activo'));
-          b.classList.add('activo');
-          actualizarResultado(tarjeta, p, parseInt(b.dataset.cuotas));
-        });
+    grid.querySelectorAll('[data-abrir-modelo]').forEach(btn => {
+      btn.addEventListener('click', () => abrirModal(btn.dataset.abrirModelo));
+    });
+  }
+
+  function initCuotasSelector(){
+    const sel = document.getElementById('cuotas-selector');
+    sel.innerHTML = CUOTAS_DISPONIBLES.map(c =>
+      `<button data-cuotas="${c}" class="${c === estado.cuotas ? 'activo' : ''}" type="button">${c}x · ${TASAS_POR_CUOTAS[c]}% anual</button>`
+    ).join('');
+    sel.querySelectorAll('button').forEach(b => {
+      b.addEventListener('click', () => {
+        sel.querySelectorAll('button').forEach(x => x.classList.remove('activo'));
+        b.classList.add('activo');
+        estado.cuotas = parseInt(b.dataset.cuotas, 10);
+        actualizarCalculo();
       });
-      actualizarResultado(tarjeta, p, CUOTAS_DISPONIBLES[1]); // default: 6 cuotas
     });
   }
 
-  function actualizarResultado(tarjeta, producto, cuotas){
-    tarjeta.querySelectorAll('.selector-cuotas button').forEach(b=>{
-      b.classList.toggle('activo', parseInt(b.dataset.cuotas) === cuotas);
-    });
-    const { entregaInicial, montoCuota } = calcularCuota(producto, cuotas);
-    tarjeta.querySelector('.monto').textContent = `${formatoGs(montoCuota)} x ${cuotas}`;
-    tarjeta.querySelector('.nota').textContent = `Entrega inicial: ${formatoGs(entregaInicial)}`;
+  function initModal(){
+    const modeloSelect = document.getElementById('modelo-select');
+    modeloSelect.innerHTML = CATALOGO.map(p => `<option value="${p.id}">${p.modelo}</option>`).join('');
+    modeloSelect.addEventListener('change', () => seleccionarModelo(modeloSelect.value));
 
-    const wspBtn = tarjeta.querySelector('[data-wsp-cta]');
-    wspBtn.href = linkWsp(
-      `Hola, me interesa el ${producto.modelo} ${producto.almacenamiento} (${producto.color}). ` +
-      `Plan: ${cuotas} cuotas de ${formatoGs(montoCuota)} c/u, entrega inicial ${formatoGs(entregaInicial)}.`
+    document.getElementById('modal-cerrar').addEventListener('click', cerrarModal);
+    document.getElementById('modal-cotizador').addEventListener('click', (e) => {
+      if (e.target.id === 'modal-cotizador') cerrarModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') cerrarModal();
+    });
+    document.getElementById('entrega-input').addEventListener('input', actualizarCalculo);
+    document.getElementById('btn-abrir-cotizador').addEventListener('click', () => abrirModal(CATALOGO[0].id));
+  }
+
+  function abrirModal(productoId){
+    document.getElementById('modal-cotizador').hidden = false;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('modelo-select').value = productoId;
+    seleccionarModelo(productoId);
+  }
+
+  function cerrarModal(){
+    document.getElementById('modal-cotizador').hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  function seleccionarModelo(productoId){
+    const producto = CATALOGO.find(p => p.id === productoId);
+    if (!producto) return;
+    estado.producto = producto;
+    estado.capacidad = producto.capacidades[0];
+    estado.color = producto.colores[0];
+
+    const capSel = document.getElementById('capacidad-selector');
+    capSel.innerHTML = producto.capacidades.map((c, i) =>
+      `<button data-almacenamiento="${c.almacenamiento}" class="${i === 0 ? 'activo' : ''}" type="button">${c.almacenamiento}</button>`
+    ).join('');
+    capSel.querySelectorAll('button').forEach(b => {
+      b.addEventListener('click', () => {
+        capSel.querySelectorAll('button').forEach(x => x.classList.remove('activo'));
+        b.classList.add('activo');
+        estado.capacidad = producto.capacidades.find(c => c.almacenamiento === b.dataset.almacenamiento);
+        actualizarCalculo();
+      });
+    });
+
+    const colorSel = document.getElementById('color-selector');
+    colorSel.innerHTML = producto.colores.map((c, i) =>
+      `<button data-color="${c}" class="${i === 0 ? 'activo' : ''}" type="button">${c}</button>`
+    ).join('');
+    colorSel.querySelectorAll('button').forEach(b => {
+      b.addEventListener('click', () => {
+        colorSel.querySelectorAll('button').forEach(x => x.classList.remove('activo'));
+        b.classList.add('activo');
+        estado.color = b.dataset.color;
+        actualizarCalculo();
+      });
+    });
+
+    document.getElementById('entrega-input').value = '';
+    actualizarCalculo();
+  }
+
+  function actualizarCalculo(){
+    const { producto, capacidad, color, cuotas } = estado;
+    if (!producto || !capacidad) return;
+
+    const entregaInput = document.getElementById('entrega-input');
+    const entregaHint = document.getElementById('entrega-hint');
+    const montoEl = document.getElementById('monto-cuota-modal');
+    const detalleEl = document.getElementById('detalle-resultado-modal');
+
+    const sugerida = capacidad.valorFinanciado * (capacidad.entregaInicialSugeridaPct / 100);
+    entregaHint.textContent = `Sugerida: ${formatoGs(sugerida)} (${capacidad.entregaInicialSugeridaPct}%) — podés poner otro monto.`;
+
+    const entregaRaw = entregaInput.value;
+    if (entregaRaw === '' || isNaN(parseFloat(entregaRaw))) {
+      montoEl.textContent = '—';
+      detalleEl.textContent = 'Ingresá la entrega inicial para calcular la cuota.';
+      actualizarLinkWsp(null);
+      return;
+    }
+
+    let entrega = parseFloat(entregaRaw);
+    if (entrega < 0) entrega = 0;
+    if (entrega > capacidad.valorFinanciado) {
+      montoEl.textContent = '—';
+      detalleEl.textContent = `La entrega no puede superar el valor financiado (${formatoGs(capacidad.valorFinanciado)}).`;
+      actualizarLinkWsp(null);
+      return;
+    }
+
+    const tasaAnual = TASAS_POR_CUOTAS[cuotas];
+    const saldo = capacidad.valorFinanciado - entrega;
+    const saldoConRecargo = saldo * (1 + tasaAnual / 100);
+    const montoCuota = saldoConRecargo / cuotas;
+
+    montoEl.textContent = `${formatoGs(montoCuota)} x ${cuotas}`;
+    detalleEl.textContent = `Entrega: ${formatoGs(entrega)} · Tasa: ${tasaAnual}% anual · Total a financiar: ${formatoGs(saldoConRecargo)}`;
+
+    actualizarLinkWsp({ producto, capacidad, color, cuotas, entrega, montoCuota, tasaAnual });
+  }
+
+  function actualizarLinkWsp(datos){
+    const btn = document.getElementById('btn-solicitar-modal');
+    if (!datos) {
+      btn.href = linkWsp('Hola, quiero información sobre financiamiento de iPhone.');
+      return;
+    }
+    const { producto, capacidad, color, cuotas, entrega, montoCuota, tasaAnual } = datos;
+    btn.href = linkWsp(
+      `Hola, quiero solicitar el ${producto.modelo} ${capacidad.almacenamiento} (${color}). ` +
+      `Plan: ${cuotas} cuotas de ${formatoGs(montoCuota)} c/u (tasa ${tasaAnual}% anual), entrega inicial ${formatoGs(entrega)}.`
     );
-  }
-
-  function tarjetaHTML(p){
-    return `
-    <div class="tarjeta" data-id="${p.id}">
-      <img src="${p.imagen}" alt="${p.modelo}">
-      <h3>${p.modelo}</h3>
-      <div class="detalle">${p.almacenamiento} · ${p.color}</div>
-      <div class="selector-cuotas">
-        ${CUOTAS_DISPONIBLES.map(c => `<button data-cuotas="${c}">${c}x</button>`).join('')}
-      </div>
-      <div class="resultado-cuota">
-        <div class="monto">—</div>
-        <div class="nota">—</div>
-      </div>
-      <a class="btn btn-primario" data-wsp-cta href="#">Consultar por WhatsApp</a>
-    </div>`;
   }
 </script>
 
