@@ -10,7 +10,7 @@
   ======================================================================
   PENDIENTES ANTES DE PUBLICAR (buscar "TODO" en este archivo y en
   data/catalog.json):
-  1. Número de WhatsApp Business real (hay uno de ejemplo puesto ahora).
+  1. Número de WhatsApp Business: ya es el real de la tienda.
   2. Logo: ya está el wordmark real (img/logo-crediphone.png). Falta el
      ícono/isologo aparte si querés uno para favicon o avatar de redes.
   3. Catálogo con precios y condiciones reales (data/catalog.json es 100%
@@ -233,7 +233,7 @@
 
 <section class="hero">
   <div class="contenedor">
-    <h1>Tu <em>iPhone</em>, sin vueltas ni bancos.</h1>
+    <h1>Cuotas más bajas, tu nuevo <em>iPhone</em> hoy.</h1>
     <p>Elegís el modelo, pagás en cuotas simples y te lo llevás hoy. Sin tarjeta de crédito, sin depender de un banco.</p>
     <div class="hero-ctas">
       <a class="btn btn-primario" href="#" data-wsp-cta data-wsp-msg="Hola, quiero financiar un iPhone.">
@@ -300,11 +300,10 @@
 
 <script>
   // ======================================================================
-  // TODO: reemplazar por el número real de WhatsApp Business (formato
-  // internacional sin "+" ni espacios, ej: 595981234567). Este es un
-  // placeholder y NO es un número real.
+  // Número de WhatsApp Business real de la tienda (formato internacional
+  // sin "+" ni espacios).
   // ======================================================================
-  const WSP_NUMERO = "595900000000";
+  const WSP_NUMERO = "595992401579";
 
   // TODO: la tasa/recargo real tiene que estar validada legalmente antes
   // de publicar. Este número es 100% de ejemplo para que el cálculo de
@@ -376,8 +375,6 @@
         });
       });
       actualizarResultado(tarjeta, p, CUOTAS_DISPONIBLES[1]); // default: 6 cuotas
-      const wspBtn = tarjeta.querySelector('[data-wsp-cta]');
-      wspBtn.href = linkWsp(`Hola, me interesa el ${p.modelo} ${p.almacenamiento} (${p.color}).`);
     });
   }
 
@@ -388,6 +385,12 @@
     const { entregaInicial, montoCuota } = calcularCuota(producto, cuotas);
     tarjeta.querySelector('.monto').textContent = `${formatoGs(montoCuota)} x ${cuotas}`;
     tarjeta.querySelector('.nota').textContent = `Entrega inicial: ${formatoGs(entregaInicial)}`;
+
+    const wspBtn = tarjeta.querySelector('[data-wsp-cta]');
+    wspBtn.href = linkWsp(
+      `Hola, me interesa el ${producto.modelo} ${producto.almacenamiento} (${producto.color}). ` +
+      `Plan: ${cuotas} cuotas de ${formatoGs(montoCuota)} c/u, entrega inicial ${formatoGs(entregaInicial)}.`
+    );
   }
 
   function tarjetaHTML(p){
