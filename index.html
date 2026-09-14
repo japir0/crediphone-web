@@ -436,7 +436,7 @@
   function initCuotasSelector(){
     const sel = document.getElementById('cuotas-selector');
     sel.innerHTML = CUOTAS_DISPONIBLES.map(c =>
-      `<button data-cuotas="${c}" class="${c === estado.cuotas ? 'activo' : ''}" type="button">${c}x · ${TASAS_POR_CUOTAS[c]}% anual</button>`
+      `<button data-cuotas="${c}" class="${c === estado.cuotas ? 'activo' : ''}" type="button">${c}x</button>`
     ).join('');
     sel.querySelectorAll('button').forEach(b => {
       b.addEventListener('click', () => {
